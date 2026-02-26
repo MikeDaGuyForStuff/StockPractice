@@ -1,0 +1,29 @@
+app = "stockpractice"
+primary_region = "fra"
+
+[processes]
+  web = "streamlit run dashboard.py --server.port 8080 --server.address 0.0.0.0"
+  bot = "python bot.py"
+
+[mounts]
+  source = "bot_data"
+  destination = "/data"
+
+[[services]]
+  processes = ["web"]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
